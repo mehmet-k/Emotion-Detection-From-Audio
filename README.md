@@ -2,10 +2,7 @@
 AI Model to detect emotion from audio using acoustic features of audio signal.
 
 Dataset used to train the model:
-<<<<<<< HEAD
 https://github.com/HLTSingapore/Emotional-Speech-Data
-=======
->>>>>>> main
 
 Feature extraction library:
 https://librosa.org/doc/latest/index.html
