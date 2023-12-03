@@ -27,6 +27,7 @@ def save_audio_to_array(speaker_name,category):
 
 #extract features from specified file
 #then write feature values to a file
+#NOT COMPLETE, DEMO VERSION
 def extract_features_by_file(speaker_name, category,audio):
     #load audio, save audio file as floating point numbers to y
     y, sr = librosa.load(audio)
@@ -37,11 +38,14 @@ def extract_features_by_file(speaker_name, category,audio):
     #####################FEATURE EXTRACTIONS#####################
     #MFCC
     a = librosa.feature.mfcc(y=y, sr=sr)
+    b = []
+    for i in a:
+        b.append(np.average(i))
     extracted_features = {
-        'mfcc':a.tolist()
+        'mfcc':b
     }
     df = pd.DataFrame(extracted_features)
-    df.to_csv(filename+'.csv',index=False)
+    df.to_csv(filename+'.csv')
     #to be completed
     print("CATEGORY: ",category," from: ",audio," features has been saved as: " ,filename)
     os.chdir("../../../..")
