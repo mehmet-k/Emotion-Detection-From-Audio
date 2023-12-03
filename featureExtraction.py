@@ -1,13 +1,10 @@
 import os
-
 import librosa
 import librosa.feature
-import numpy
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
-if not os.path.exists("ExtractedFeatures/english/"):
-    os.mkdir("ExtractedFeatures/english/")
 
 ANGRY = "Angry"
 HAPPY = "Happy"
@@ -17,45 +14,67 @@ SURPRISE = "Surprise"
 
 emotion_categories = [ANGRY,HAPPY,NEUTRAL,SAD,SURPRISE]
 
-def save_audio_to_array(filename,category):
+if not os.path.exists("ExtractedFeatures"):
+    os.mkdir("ExtractedFeatures")
+
+#get file paths of all audios of specified category as string
+def save_audio_to_array(speaker_name,category):
     audio = []
-    for file in os.listdir('trainingSet/english/00'+filename+"/"+category):
-        audio.append("trainingSet/english/00"+filename+"/"+category+"/"+file)
+    for file in os.listdir("trainingSet/english/00"+speaker_name+ "/" + category):
+        audio.append("trainingSet/english/00"+speaker_name+ "/" + category+"/"+file)
 
     return audio
 
-def extract_feautes_by_file(speaker_name, category,path):
-    filename = str(path).strip("trainingSet/english/00" + speaker_name + "/" + category + "/")
-    filename = filename.strip(".wav")
-    #save name to write a file
-    #save audio file as floating point numbers to y
-    y, sr = librosa.load(path)
-    #####################FEATUR EXTRACTIONS#####################
+#extract features from specified file
+#then write feature values to a file
+def extract_features_by_file(speaker_name, category,audio):
+    #load audio, save audio file as floating point numbers to y
+    y, sr = librosa.load(audio)
+    # save name to write a file
+    filename = audio.strip("trainingSet/english/00"+speaker_name+ "/" + category+"/").strip(".wav")
+    filename = '00'+speaker_name+filename
+    os.chdir("ExtractedFeatures/english/00"+speaker_name+ "/" + category)
+    #####################FEATURE EXTRACTIONS#####################
     #MFCC
     a = librosa.feature.mfcc(y=y, sr=sr)
-    os.chdir("ExtractedFeatures/english/00" + speaker_name + "/" + category + "/")
-    #save extracted mfcc features to to file
-    numpy.savetxt(filename,a)
+    extracted_features = {
+        'mfcc':a.tolist()
+    }
+    df = pd.DataFrame(extracted_features)
+    df.to_csv(filename+'.csv',index=False)
+    #to be completed
+    print("CATEGORY: ",category," from: ",audio," features has been saved as: " ,filename)
     os.chdir("../../../..")
 
+#extract features based on emotion category
+#category = folder name
 def extract_features_by_category(speaker_name,category):
     if not os.path.exists("ExtractedFeatures/english/00"+speaker_name+ "/" + category):
         os.mkdir("ExtractedFeatures/english/00"+speaker_name+ "/" + category)
-    paths = np.array(save_audio_to_array(speaker_name, category))
-    for i in range(len(paths)):
-        extract_feautes_by_file(speaker_name,category,paths[i])
+    audios = save_audio_to_array(speaker_name, category)
+    for audio in audios:
+        extract_features_by_file(speaker_name,category,audio)
 
+
+#extract features of an actor/actress
+#speaker_name = folder name (0011,0012...)
 def extract_features_by_speaker(speaker_name):
     if not os.path.exists("ExtractedFeatures/english/00" + speaker_name):
         os.mkdir("ExtractedFeatures/english/00" + speaker_name)
-    for i in range(len(emotion_categories)):
-        extract_features_by_category(speaker_name,emotion_categories[i])
+    for category in emotion_categories:
+        extract_features_by_category(speaker_name,category)
+
+#extract features from english speaking training set
+def extract_english_features():
+    if not os.path.exists("ExtractedFeatures/english/"):
+        os.mkdir("ExtractedFeatures/english/")
+    extract_features_by_speaker(str(11))
+#    i = 10
+#    while i < 20:
+#        i = i + 1
+#        extract_features_by_speaker(str(i))
 
 def main():
-    extract_features_by_speaker(str(11))
-    #i=10
-    #while i<20:
-    #    i=i+1
-    #    extract_features_by_speaker(str(i))
-    #
+    extract_english_features()
+
 main()
