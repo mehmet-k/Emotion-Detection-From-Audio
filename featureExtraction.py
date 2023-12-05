@@ -25,40 +25,61 @@ def save_audio_to_array(speaker_name,category):
 
     return audio
 
+def saveFeaturesToDictionary(feature_name,feature_array,extracted_features):
+    b = []
+    for i in feature_array:
+        b.append(np.average(i))
+    x = [np.average(b)]
+    extracted_features.update({feature_name: x})
+
 #extract features from specified file
 #then write feature values to a file
 #NOT COMPLETE, DEMO VERSION
-def extract_features_by_file(speaker_name, category,audio):
+def extract_features_by_file(speaker_name, category,audio,extracted_features):
     #load audio, save audio file as floating point numbers to y
     y, sr = librosa.load(audio)
     # save name to write a file
-    filename = audio.strip("trainingSet/english/00"+speaker_name+ "/" + category+"/").strip(".wav")
-    filename = '00'+speaker_name+filename
-    os.chdir("ExtractedFeatures/english/00"+speaker_name+ "/" + category)
+    os.chdir("ExtractedFeatures/english/00" + speaker_name + "/")
     #####################FEATURE EXTRACTIONS#####################
     #MFCC
     a = librosa.feature.mfcc(y=y, sr=sr)
-    b = []
-    for i in a:
-        b.append(np.average(i))
-    extracted_features = {
-        'mfcc':b
-    }
+    saveFeaturesToDictionary('mfcc',a,extracted_features)
+
+    a = librosa.feature.chroma_stft(y=y,sr=sr)
+    saveFeaturesToDictionary('chroma_stft',a,extracted_features)
+
+    a = librosa.feature.chroma_cqt(y=y,sr=sr,bins_per_octave=12,)
+    saveFeaturesToDictionary('chroma_cqt',a,extracted_features)
+
+    a=librosa.feature.chroma_vqt(y=y,sr=sr,intervals='ji3')
+    saveFeaturesToDictionary('chroma_vqt',a,extracted_features)
+
+    a=librosa.feature.melspectrogram(y=y,sr=sr)
+    saveFeaturesToDictionary('melspectrogram',a,extracted_features)
+
     df = pd.DataFrame(extracted_features)
-    df.to_csv(filename+'.csv')
+    df.to_csv(category + '.csv', mode='a', header=False,index=False)
     #to be completed
-    print("CATEGORY: ",category," from: ",audio," features has been saved as: " ,filename)
-    os.chdir("../../../..")
+    print("CATEGORY: ",category," from: ",audio," features has been saved")
+    os.chdir("../../..")
 
 #extract features based on emotion category
 #category = folder name
 def extract_features_by_category(speaker_name,category):
-    if not os.path.exists("ExtractedFeatures/english/00"+speaker_name+ "/" + category):
-        os.mkdir("ExtractedFeatures/english/00"+speaker_name+ "/" + category)
+    extracted_features = {
+        'mfcc': [],
+        'chroma_stft': [],
+        'chroma_cqt': [],
+        'chroma_vqt': [],
+        'melspectrogram': []
+    }
+    os.chdir("ExtractedFeatures/english/00" + speaker_name + "/")
+    df = pd.DataFrame(extracted_features)
+    df.to_csv(category + '.csv',index=False)
+    os.chdir("../../..")
     audios = save_audio_to_array(speaker_name, category)
     for audio in audios:
-        extract_features_by_file(speaker_name,category,audio)
-
+        extract_features_by_file(speaker_name,category,audio,extracted_features)
 
 #extract features of an actor/actress
 #speaker_name = folder name (0011,0012...)
