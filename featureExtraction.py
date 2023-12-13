@@ -5,7 +5,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
 ANGRY = "Angry"
 HAPPY = "Happy"
 NEUTRAL = "Neutral"
@@ -31,6 +30,28 @@ def saveFeaturesToDictionary(feature_name,feature_array,extracted_features):
         b.append(np.average(i))
     x = [np.average(b)]
     extracted_features.update({feature_name: x})
+
+def saveFlattenedFeaturesToDictionary(feature_array):
+    b = []
+    for i in feature_array:
+        b.append(np.average(i))
+    x = [b]
+    return x
+
+def extractOnlyMFCC(language,speaker_name, category,audio):
+    y, sr = librosa.load(audio)
+    # save name to write a file
+    os.chdir("ExtractedFeatures/" + language + "/00" + speaker_name + "/")
+    #####################FEATURE EXTRACTIONS#####################
+    # MFCC
+    a = librosa.feature.mfcc(y=y, sr=sr)
+    a = saveFlattenedFeaturesToDictionary( a)
+
+    df = pd.DataFrame(a)
+    df.to_csv(category + 'MFCC.csv', mode='a', header=False, index=False)
+    # to be completed
+    print("CATEGORY: ", category, " from: ", audio, " features has been saved")
+    os.chdir("../../..")
 
 #extract features from specified file
 #then write feature values to a file
@@ -73,13 +94,18 @@ def extract_features_by_category(language,speaker_name,category):
         'chroma_vqt': [],
         'melspectrogram': []
     }
-    os.chdir("ExtractedFeatures/"+language+"/00" + speaker_name + "/")
-    df = pd.DataFrame(extracted_features)
-    df.to_csv(category + '.csv',index=False)
+#    os.chdir("ExtractedFeatures/"+language+"/00" + speaker_name + "/")
+#    df = pd.DataFrame(extracted_features)
+#    df.to_csv(category + '.csv',index=False)
+#    os.chdir("../../..")
+    os.chdir("ExtractedFeatures/" + language + "/00" + speaker_name + "/")
+    df = pd.DataFrame()
+    #df.to_csv(category + 'MFCC.csv', index=False)
     os.chdir("../../..")
     audios = save_audio_to_array(language,speaker_name, category)
     for audio in audios:
-        extract_features_by_file(language,speaker_name,category,audio,extracted_features)
+        #extract_features_by_file(language,speaker_name,category,audio,extracted_features)
+        extractOnlyMFCC(language,speaker_name,category,audio)
 
 #extract features of an actor/actress
 #speaker_name = folder name (0011,0012...)
@@ -93,7 +119,9 @@ def extract_features_by_speaker(language,speaker_name):
 def extract_english_features():
     if not os.path.exists("ExtractedFeatures/english/"):
         os.mkdir("ExtractedFeatures/english/")
-    for i in range(11,20):
+    #extract_features_by_speaker("english", "13")
+    #extract_features_by_speaker("english","12")
+    for i in range(20,21):
         extract_features_by_speaker("english",str(i))
 
 def extract_mandarin_features():
@@ -104,6 +132,6 @@ def extract_mandarin_features():
     extract_features_by_speaker("mandarin",str(10))
 def main():
     extract_english_features()
-    extract_mandarin_features()
+    #extract_mandarin_features()
 
 main()
