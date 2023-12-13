@@ -18,10 +18,10 @@ if not os.path.exists("ExtractedFeatures"):
     os.mkdir("ExtractedFeatures")
 
 #get file paths of all audios of specified category as string
-def save_audio_to_array(speaker_name,category):
+def save_audio_to_array(language,speaker_name,category):
     audio = []
-    for file in os.listdir("trainingSet/english/00"+speaker_name+ "/" + category):
-        audio.append("trainingSet/english/00"+speaker_name+ "/" + category+"/"+file)
+    for file in os.listdir("trainingSet/"+language+"/00"+speaker_name+ "/" + category):
+        audio.append("trainingSet/"+language+"/00"+speaker_name+ "/" + category+"/"+file)
 
     return audio
 
@@ -35,11 +35,11 @@ def saveFeaturesToDictionary(feature_name,feature_array,extracted_features):
 #extract features from specified file
 #then write feature values to a file
 #NOT COMPLETE, DEMO VERSION
-def extract_features_by_file(speaker_name, category,audio,extracted_features):
+def extract_features_by_file(language,speaker_name, category,audio,extracted_features):
     #load audio, save audio file as floating point numbers to y
     y, sr = librosa.load(audio)
     # save name to write a file
-    os.chdir("ExtractedFeatures/english/00" + speaker_name + "/")
+    os.chdir("ExtractedFeatures/"+language+"/00" + speaker_name + "/")
     #####################FEATURE EXTRACTIONS#####################
     #MFCC
     a = librosa.feature.mfcc(y=y, sr=sr)
@@ -65,7 +65,7 @@ def extract_features_by_file(speaker_name, category,audio,extracted_features):
 
 #extract features based on emotion category
 #category = folder name
-def extract_features_by_category(speaker_name,category):
+def extract_features_by_category(language,speaker_name,category):
     extracted_features = {
         'mfcc': [],
         'chroma_stft': [],
@@ -73,33 +73,37 @@ def extract_features_by_category(speaker_name,category):
         'chroma_vqt': [],
         'melspectrogram': []
     }
-    os.chdir("ExtractedFeatures/english/00" + speaker_name + "/")
+    os.chdir("ExtractedFeatures/"+language+"/00" + speaker_name + "/")
     df = pd.DataFrame(extracted_features)
     df.to_csv(category + '.csv',index=False)
     os.chdir("../../..")
-    audios = save_audio_to_array(speaker_name, category)
+    audios = save_audio_to_array(language,speaker_name, category)
     for audio in audios:
-        extract_features_by_file(speaker_name,category,audio,extracted_features)
+        extract_features_by_file(language,speaker_name,category,audio,extracted_features)
 
 #extract features of an actor/actress
 #speaker_name = folder name (0011,0012...)
-def extract_features_by_speaker(speaker_name):
-    if not os.path.exists("ExtractedFeatures/english/00" + speaker_name):
-        os.mkdir("ExtractedFeatures/english/00" + speaker_name)
+def extract_features_by_speaker(language,speaker_name):
+    if not os.path.exists("ExtractedFeatures/"+language+"/00" + speaker_name):
+        os.mkdir("ExtractedFeatures/"+language+"/00" + speaker_name)
     for category in emotion_categories:
-        extract_features_by_category(speaker_name,category)
+        extract_features_by_category(language,speaker_name,category)
 
 #extract features from english speaking training set
 def extract_english_features():
     if not os.path.exists("ExtractedFeatures/english/"):
         os.mkdir("ExtractedFeatures/english/")
-    extract_features_by_speaker(str(11))
-#    i = 10
-#    while i < 20:
-#        i = i + 1
-#        extract_features_by_speaker(str(i))
+    for i in range(11,20):
+        extract_features_by_speaker("english",str(i))
 
+def extract_mandarin_features():
+    if not os.path.exists("ExtractedFeatures/mandarin/"):
+        os.mkdir("ExtractedFeatures/mandarin/")
+    for i in range (1,9):
+        extract_features_by_speaker("mandarin","0"+str(i))
+    extract_features_by_speaker("mandarin",str(10))
 def main():
     extract_english_features()
+    extract_mandarin_features()
 
 main()
