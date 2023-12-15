@@ -1,12 +1,11 @@
-import os
-import numpy as np
-import matplotlib.pyplot as plt
-import sklearn.feature_selection as skl
-import pandas as pd
 
-
-
+"""
+    :argument
+    y : Target Vector
+    X : Predicted Values
+"""
 def printScores(y,X):
+
     scores = [0,0,0,0,0]
 
     for j in range(0, len(y)):
