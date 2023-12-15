@@ -1,21 +1,17 @@
-import os
 import numpy as np
-import matplotlib.pyplot as plt
-import sklearn
-import sklearn.feature_selection as skl
-import pandas as pd
 from sklearn import svm
 import util.CreateDataFrames as CDF
 import util.CreateTargetVectors as CTV
 import util.printScores as PS
 
 K=1
-masterDF = CDF.createMasterDataFrameMFCC("11","english",True,True,True,True,True)
+masterDF = CDF.createMasterDataFrameAllEmotions("11","english","MFCC")
+#alternative call to above :  CDF.createMasterDataFrame("11","english","MFCC",True,True,True,True,True)
 inital_length = len(masterDF)/5
 print(inital_length)
 for i in range(12,17):
     K+=1
-    masterDF = np.concatenate((masterDF,CDF.createMasterDataFrameMFCC(str(i),"english",True,True,True,True,True)))
+    masterDF = np.concatenate((masterDF,CDF.createMasterDataFrameAllEmotions(str(i),"english","MFCC")))
 
 y=CTV.createTargetVectorALL(inital_length)
 for i in range(12,17):
@@ -27,7 +23,7 @@ print(masterDF.shape,len(y))
 clf = svm.SVC(decision_function_shape='ovo')
 clf.fit(masterDF,y)
 
-masterDF = CDF.createMasterDataFrameMFCC("18","english",True,True,True,True,True)
+masterDF = CDF.createMasterDataFrameAllEmotions("18","english","MFCC")
 print(masterDF.shape)
 
 df = clf.predict(masterDF)
