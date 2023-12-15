@@ -38,6 +38,20 @@ def saveFlattenedFeaturesToDictionary(feature_array):
     x = [b]
     return x
 
+def extractOnlyMEL(language,speaker_name, category,audio):
+    y, sr = librosa.load(audio)
+    # save name to write a file
+    os.chdir("ExtractedFeatures/" + language + "/00" + speaker_name + "/")
+    #####################FEATURE EXTRACTIONS#####################
+    # MEL
+    a = librosa.feature.mfcc(y=y, sr=sr)
+    a = saveFlattenedFeaturesToDictionary(a)
+
+    df = pd.DataFrame(a)
+    df.to_csv(category + 'MEL.csv', mode='a', header=False, index=False)
+    # to be completed
+    print("CATEGORY: ", category, " from: ", audio, " features has been saved")
+    os.chdir("../../..")
 def extractOnlyMFCC(language,speaker_name, category,audio):
     y, sr = librosa.load(audio)
     # save name to write a file
@@ -121,7 +135,7 @@ def extract_english_features():
         os.mkdir("ExtractedFeatures/english/")
     #extract_features_by_speaker("english", "13")
     #extract_features_by_speaker("english","12")
-    for i in range(20,21):
+    for i in range(18,19):
         extract_features_by_speaker("english",str(i))
 
 def extract_mandarin_features():
