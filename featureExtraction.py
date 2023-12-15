@@ -135,7 +135,7 @@ def extract_english_features():
         os.mkdir("ExtractedFeatures/english/")
     #extract_features_by_speaker("english", "13")
     #extract_features_by_speaker("english","12")
-    for i in range(18,19):
+    for i in range(11,16):
         extract_features_by_speaker("english",str(i))
 
 def extract_mandarin_features():
