@@ -131,7 +131,7 @@ def extract_mandarin_features():
         extract_features_by_speaker("mandarin","0"+str(i))
     extract_features_by_speaker("mandarin",str(10))
 def main():
-    extract_english_features()
-    #extract_mandarin_features()
+    #extract_english_features()
+    extract_mandarin_features()
 
 main()

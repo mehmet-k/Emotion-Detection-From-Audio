@@ -1,10 +1,10 @@
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from sklearn.datasets import make_classification
 import os
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def createTargetVector():
     vector = []
@@ -77,11 +77,13 @@ def createMasterDataFrame(speaker_name):
     return master_data_frame
 
 y = createTargetVector()
-masterDF = createMasterDataFrameMFCC("20")
-for i in range(11,16):
+#başladığı yer!!!
+masterDF = createMasterDataFrameMFCC("11")
+for i in range(12,16):
     masterDF = np.concatenate((masterDF,createMasterDataFrameMFCC(str(i))))
-
-for i in range(11,16):
+#12,16 
+#2, 9
+for i in range(12,16 ):
     y = np.concatenate((y, createTargetVector()))
 
 X = masterDF
@@ -132,3 +134,18 @@ print("surprise score:", scores[4]/count[4]*100)
 
 accuracy = accuracy_score(y_test, y_pred)
 print("Accuracy: {:.2f}%".format(accuracy*100))
+
+# Your emotion labels and scores
+emotions = ['angry', 'happy', 'neutral', 'sad', 'surprise']
+scores = [scores[0]/count[0]*100, scores[1]/count[1]*100, scores[2]/count[2]*100, scores[3]/count[3]*100, scores[4]/count[4]*100]
+
+# Create a bar plot
+plt.bar(emotions, scores, color=['#FFB6C1', '#FFD700', '#98FB98', '#ADD8E6', '#FFA07A'])
+plt.xlabel('Emotions', fontweight='bold')
+plt.ylabel('Scores', fontweight='bold')
+plt.title('Emotion Scores')
+plt.ylim(0, 100)  # You can adjust the y-axis limits if needed
+
+# Show the plot
+plt.show()
+
