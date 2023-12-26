@@ -5,18 +5,19 @@ import sklearn
 import sklearn.feature_selection as skl
 import pandas as pd
 from sklearn import svm
-import CreateTargetVectors as CTV
-import CreateDataFrames as CDF
+
+from util import CreateTargetVectors as CTV
+from util import CreateDataFrames as CDF
 
 
 
-masterDF = CDF.createMasterDataFrame_ANGRY_HAPPY(str(11))
+masterDF = CDF.createMasterDataFrameAllEmotions(str(11),'English','MFCC')
 for i in range(12,16):
-    masterDF = np.concatenate((masterDF,CDF.createMasterDataFrame_ANGRY_HAPPY(str(i))))
+    masterDF = np.concatenate((masterDF,CDF.createMasterDataFrameAllEmotions(str(11),'English','MFCC')))
 
-y = CTV.createTargetVector_ANGRY_HAPPY()
+y = CTV.createTargetVectorALL(len(masterDF))
 for i in range(12,16):
-    y = np.append(y,CTV.createTargetVector_ANGRY_HAPPY())
+    y = np.append(y,CTV.createTargetVectorALL(len(masterDF)))
 
 print(masterDF.shape,len(y))
 for i in range(len(y)):
@@ -27,7 +28,7 @@ clf = svm.SVC(decision_function_shape='ovo',class_weight={"Angry":7,"Happy":3})
 clf.fit(masterDF,y)
 
 #dec = clf.decision_function(y)
-testDF = CDF.createMasterDataFrame_ANGRY_HAPPY("16")
+testDF = CDF.createMasterDataFrameAllEmotions(str(11),'English','MFCC')
 
 print(testDF.shape)
 
@@ -37,7 +38,7 @@ df = clf.predict(testDF)
 #dec = lin_clf.decision_function(masterDF)
 
 #df = lin_clf.predict(masterDF)
-y = CTV.createTargetVector_ANGRY_HAPPY()
+y = CTV.createTargetVectorALL()
 #dfx = pd.DataFrame(df)
 #dfx.to_csv("predictions.csv",index=False)
 scores=[0,0]

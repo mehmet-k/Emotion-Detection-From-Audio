@@ -77,11 +77,11 @@ def createMasterDataFrame(speaker_name):
     return master_data_frame
 
 y = createTargetVector()
-masterDF = createMasterDataFrameMFCC("20")
-for i in range(11,16):
+masterDF = createMasterDataFrameMFCC("11")
+for i in range(12,16):
     masterDF = np.concatenate((masterDF,createMasterDataFrameMFCC(str(i))))
 
-for i in range(11,16):
+for i in range(12,16):
     y = np.concatenate((y, createTargetVector()))
 
 X = masterDF

@@ -1,4 +1,4 @@
-
+import matplotlib.pyplot as plt
 """
     :argument
     y : Target Vector
@@ -43,4 +43,20 @@ def printScores(y,X):
         print("sad score:", scores[3]/count[3] * 100)
     if count[4] != 0:
         print("surprise score:", scores[4]/count[4] * 100)
+
+        
+
+
+    emotions = ['angry', 'happy', 'neutral', 'sad', 'surprise']
+    scores = [scores[0]/count[0]*100, scores[1]/count[1]*100, scores[2]/count[2]*100, scores[3]/count[3]*100, scores[4]/count[4]*100]
+
+    plt.bar(emotions, scores, color=['#FFB6C1', '#FFD700', '#98FB98', '#ADD8E6', '#FFA07A'])
+    plt.xlabel('Emotions', fontweight='bold')
+    plt.ylabel('Scores', fontweight='bold')
+    plt.title('Emotion Scores')
+    plt.ylim(0, 100)  
+
+    plt.show()      
+
+
 
