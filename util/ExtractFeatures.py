@@ -54,7 +54,7 @@ def extractOnlyMEL(language,speaker_name, category,audio):
     os.chdir("ExtractedFeatures/" + language + "/00" + speaker_name + "/")
     #####################FEATURE EXTRACTIONS#####################
     # MEL
-    a = librosa.feature.mfcc(y=y, sr=sr)
+    a = librosa.feature.mel(y=y, sr=sr)
     a = saveFeaturesToDictionary(a)
     #feature extraction end
     df = pd.DataFrame(a)
