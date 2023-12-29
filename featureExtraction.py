@@ -67,6 +67,21 @@ def extractOnlyMFCC(language,speaker_name, category,audio):
     print("CATEGORY: ", category, " from: ", audio, " features has been saved")
     os.chdir("../../..")
 
+def extractOnlyTEMPO(language,speaker_name, category,audio):
+    y, sr = librosa.load(audio)
+    # save name to write a file
+    os.chdir("ExtractedFeatures/" + language + "/00" + speaker_name + "/")
+    #####################FEATURE EXTRACTIONS#####################
+    # MFCC
+    a = librosa.feature.tempo(y=y, sr=sr)
+    a = saveFlattenedFeaturesToDictionary( a)
+
+    df = pd.DataFrame(a)
+    df.to_csv(category + 'TEMPO.csv', mode='a', header=False, index=False)
+    # to be completed
+    print("CATEGORY: ", category, " from: ", audio, " features has been saved")
+    os.chdir("../../..")
+
 #extract features from specified file
 #then write feature values to a file
 #NOT COMPLETE, DEMO VERSION
@@ -121,6 +136,7 @@ def extract_features_by_category(language,speaker_name,category):
         #extract_features_by_file(language,speaker_name,category,audio,extracted_features)
         #extractOnlyMFCC(language,speaker_name,category,audio)
         extractOnlyMEL(language,speaker_name,category,audio)
+        extractOnlyTEMPO(language,speaker_name,category,audio)
         
 #extract features of an actor/actress
 #speaker_name = folder name (0011,0012...)
