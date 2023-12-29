@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7ccb7664-6372-4db2-a5a7-f9f7d8726ff2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/SVM.py" beforeDir="false" afterPath="$PROJECT_DIR$/SVM.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/util/printScores.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/printScores.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

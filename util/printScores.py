@@ -4,33 +4,30 @@
     y : Target Vector
     X : Predicted Values
 """
-def printScores(y,X):
-
-    scores = [0,0,0,0,0]
-
-    for j in range(0, len(y)):
-        if y[j] == X[j] and y[j] == "Angry":
+def printScores(y_test,y_pred):
+    scores = [0, 0, 0, 0, 0]
+    for j in range(0, len(y_pred)):
+        if y_test[j] == y_pred[j] and y_test[j] == "Angry":
             scores[0] = scores[0] + 1
-        elif y[j] == X[j] and y[j] == "Happy":
+        elif y_test[j] == y_pred[j] and y_test[j] == "Happy":
             scores[1] = scores[1] + 1
-        elif y[j] == X[j] and y[j] == "Neutral":
+        elif y_test[j] == y_pred[j] and y_test[j] == "Neutral":
             scores[2] = scores[2] + 1
-        elif y[j] == X[j] and y[j] == "Sad":
+        elif y_test[j] == y_pred[j] and y_test[j] == "Sad":
             scores[3] = scores[3] + 1
-        elif y[j] == X[j] and y[j] == "Surprise":
+        elif y_test[j] == y_pred[j] and y_test[j] == "Surprise":
             scores[4] = scores[4] + 1
-
-    count = [0,0,0,0,0]
-    for j in range(0, len(y)):
-        if y[j] == "Angry":
+    count = [0, 0, 0, 0, 0]
+    for j in range(0, len(y_pred)):
+        if y_test[j] == "Angry":
             count[0] += 1
-        elif y[j] == "Happy":
+        elif y_test[j] == "Happy":
             count[1] += 1
-        elif y[j] == "Neutral":
+        elif y_test[j] == "Neutral":
             count[2] += 1
-        elif y[j] == "Sad":
+        elif y_test[j] == "Sad":
             count[3] += 1
-        elif y[j] == "Surprise":
+        elif y_test[j] == "Surprise":
             count[4] += 1
 
     if count[0] != 0:
@@ -70,8 +67,6 @@ def printScoresOld(y_test,y_pred):
             count[3] += 1
         elif y_test[j] == "Surprise":
             count[4] += 1
-    for i in range(0, len(count)):
-        print(count[i])
 
     print("angry score:", scores[0] / count[0] * 100)
 
