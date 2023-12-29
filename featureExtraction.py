@@ -44,7 +44,7 @@ def extractOnlyMEL(language,speaker_name, category,audio):
     os.chdir("ExtractedFeatures/" + language + "/00" + speaker_name + "/")
     #####################FEATURE EXTRACTIONS#####################
     # MEL
-    a = librosa.feature.mfcc(y=y, sr=sr)
+    a = librosa.feature.melspectrogram(y=y, sr=sr)
     a = saveFlattenedFeaturesToDictionary(a)
 
     df = pd.DataFrame(a)
@@ -119,8 +119,9 @@ def extract_features_by_category(language,speaker_name,category):
     audios = save_audio_to_array(language,speaker_name, category)
     for audio in audios:
         #extract_features_by_file(language,speaker_name,category,audio,extracted_features)
-        extractOnlyMFCC(language,speaker_name,category,audio)
-
+        #extractOnlyMFCC(language,speaker_name,category,audio)
+        extractOnlyMEL(language,speaker_name,category,audio)
+        
 #extract features of an actor/actress
 #speaker_name = folder name (0011,0012...)
 def extract_features_by_speaker(language,speaker_name):
