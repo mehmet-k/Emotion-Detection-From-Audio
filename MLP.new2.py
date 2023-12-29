@@ -21,7 +21,7 @@ inital_length = len(masterDF)/5
 print(inital_length)
 for i in range(12,16):
     K+=1
-    masterDF = np.concatenate((masterDF,CDF.createMasterDataFrameAllEmotions(str(i),"english","MFCC")))
+    masterDF = np.concatenate((masterDF,CDF.createMasterDataFrameAllEmotions(str(i),"english","MEL")))
 
 y=CTV.createTargetVectorALL(inital_length)
 for i in range(12,16):
