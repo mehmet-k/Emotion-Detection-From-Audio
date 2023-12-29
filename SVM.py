@@ -26,9 +26,9 @@ print(masterDF,y)
 
 X_train, X_test, y_train, y_test = train_test_split(masterDF, y, stratify=y,random_state=1)
 
-lin_clf = svm.SVC(decision_function_shape='ovo',kernel="rbf")
+lin_clf = svm.SVC(decision_function_shape='ovo', kernel= "rbf")
 lin_clf.fit(X_train, y_train)
-dec = lin_clf.decision_function(masterDF)
+
 
 y_pred = lin_clf.predict(X_test)
 scores=[0,0,0,0,0]
