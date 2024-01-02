@@ -151,9 +151,9 @@ def extract_english_features():
     if not os.path.exists("ExtractedFeatures/english/"):
         os.mkdir("ExtractedFeatures/english/")
     #extract_features_by_speaker("english", "13")
-    #extract_features_by_speaker("english","12")
-    for i in range(11,16):
-        extract_features_by_speaker("english",str(i))
+    extract_features_by_speaker("english","11")
+    #for i in range(11,16):
+        #extract_features_by_speaker("english",str(i))
 
 def extract_mandarin_features():
     if not os.path.exists("ExtractedFeatures/mandarin/"):

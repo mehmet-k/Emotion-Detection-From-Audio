@@ -5,10 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7ccb7664-6372-4db2-a5a7-f9f7d8726ff2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/util/mergeDataFrames.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SVM.py" beforeDir="false" afterPath="$PROJECT_DIR$/SVM.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ExtractedFeatures/english/0011/AngryMEL.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ExtractedFeatures/english/0011/HappyMEL.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ExtractedFeatures/english/0011/NeutralMEL.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ExtractedFeatures/english/0011/SadMEL.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ExtractedFeatures/english/0011/SurpriseMEL.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/featureExtraction.py" beforeDir="false" afterPath="$PROJECT_DIR$/featureExtraction.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/util/CreateDataFrames.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/CreateDataFrames.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/mergeDataFrames.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/mergeDataFrames.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +52,8 @@
     "Python.SVMdemo2.executor": "Run",
     "Python.deneme.executor": "Run",
     "Python.featureExtraction.executor": "Run",
+    "Python.mergeDataFrames.executor": "Run",
+    "Python.test.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "mehmet__new",
