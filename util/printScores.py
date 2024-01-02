@@ -1,4 +1,4 @@
-
+import matplotlib.pyplot as plt
 """
     :argument
     y : Target Vector
@@ -41,6 +41,7 @@ def printScores(y_test,y_pred):
     if count[4] != 0:
         print("surprise score:", scores[4]/count[4] * 100)
 
+        
 
 def printScoresOld(y_test,y_pred):
     scores = [0, 0, 0, 0, 0]
