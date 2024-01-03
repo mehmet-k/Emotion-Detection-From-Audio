@@ -70,13 +70,29 @@ def extractOnlyMFCC(language,speaker_name, category,audio):
     #####################FEATURE EXTRACTIONS#####################
     # MFCC
     a = librosa.feature.mfcc(y=y, sr=sr)
-    a = saveFeaturesToDictionary( a)
+    a = saveFeaturesToDictionary(a)
     #feature extraction end
     df = pd.DataFrame(a)
     df.to_csv(category + 'MFCC.csv', mode='a', header=False, index=False)
     # to be completed
     print("CATEGORY: ", category, " from: ", audio, " features has been saved with mod MFCC")
     os.chdir("../../..")
+
+def extractOnlyTEMPO(language,speaker_name, category,audio):
+    y, sr = librosa.load(audio)
+    # save name to write a file
+    os.chdir("ExtractedFeatures/" + language + "/00" + speaker_name + "/")
+    #####################FEATURE EXTRACTIONS#####################
+    # MFCC
+    a = librosa.feature.tempo(y=y, sr=sr)
+    a = saveFeaturesToDictionary( a)
+    #feature extraction end
+    df = pd.DataFrame(a)
+    df.to_csv(category + 'TEMPO.csv', mode='a', header=False, index=False)
+    # to be completed
+    print("CATEGORY: ", category, " from: ", audio, " features has been saved with mod TEMPO")
+    os.chdir("../../..")
+
 
 def save_audio_to_array(language,speaker_name,category):
     audio = []
@@ -87,12 +103,20 @@ def save_audio_to_array(language,speaker_name,category):
 
 def extract_features_by_category_with_mod(language,speaker_name,category,mod):
     audios = save_audio_to_array(language,speaker_name, category)
+    df = pd.DataFrame()
     if mod == "MFCC":
+        df.to_csv(category + 'MFCC.csv', mode='w', header=False, index=False)
         for audio in audios:
             extractOnlyMFCC(language,speaker_name,category,audio)
     elif mod == "MEL":
+        df.to_csv(category + 'MEL.csv', mode='w', header=False, index=False)
         for audio in audios:
             extractOnlyMEL(language,speaker_name,category,audio)
+    elif mod == "TEMPO":
+        df.to_csv(category + 'TEMPO.csv', mode='w', header=False, index=False)
+        for audio in audios:
+            extractOnlyMFCC(language,speaker_name,category,audio)
+        
     #if new functions added for feature extraction, continue this if block
     #with the same structure
 

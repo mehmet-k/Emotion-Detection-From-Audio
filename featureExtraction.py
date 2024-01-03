@@ -52,6 +52,7 @@ def extractOnlyMEL(language,speaker_name, category,audio):
     # to be completed
     print("CATEGORY: ", category, " from: ", audio, " features has been saved")
     os.chdir("../../..")
+
 def extractOnlyMFCC(language,speaker_name, category,audio):
     y, sr = librosa.load(audio)
     # save name to write a file
@@ -63,6 +64,21 @@ def extractOnlyMFCC(language,speaker_name, category,audio):
 
     df = pd.DataFrame(a)
     df.to_csv(category + 'MFCC.csv', mode='a', header=False, index=False)
+    # to be completed
+    print("CATEGORY: ", category, " from: ", audio, " features has been saved")
+    os.chdir("../../..")
+
+def extractOnlyTEMPO(language,speaker_name, category,audio):
+    y, sr = librosa.load(audio)
+    # save name to write a file
+    os.chdir("ExtractedFeatures/" + language + "/00" + speaker_name + "/")
+    #####################FEATURE EXTRACTIONS#####################
+    # MFCC
+    a = librosa.feature.tempo(y=y, sr=sr)
+    a = saveFlattenedFeaturesToDictionary( a)
+
+    df = pd.DataFrame(a)
+    df.to_csv(category + 'TEMPO.csv', mode='a', header=False, index=False)
     # to be completed
     print("CATEGORY: ", category, " from: ", audio, " features has been saved")
     os.chdir("../../..")
@@ -121,6 +137,7 @@ def extract_features_by_category(language,speaker_name,category):
         #extract_features_by_file(language,speaker_name,category,audio,extracted_features)
         #extractOnlyMFCC(language,speaker_name,category,audio)
         extractOnlyMEL(language,speaker_name,category,audio)
+        extractOnlyTEMPO(language,speaker_name,category,audio)
         
 #extract features of an actor/actress
 #speaker_name = folder name (0011,0012...)
@@ -135,9 +152,9 @@ def extract_english_features():
     if not os.path.exists("ExtractedFeatures/english/"):
         os.mkdir("ExtractedFeatures/english/")
     #extract_features_by_speaker("english", "13")
-    #extract_features_by_speaker("english","12")
-    for i in range(11,16):
-        extract_features_by_speaker("english",str(i))
+    extract_features_by_speaker("english","11")
+    #for i in range(11,16):
+        #extract_features_by_speaker("english",str(i))
 
 def extract_mandarin_features():
     if not os.path.exists("ExtractedFeatures/mandarin/"):
