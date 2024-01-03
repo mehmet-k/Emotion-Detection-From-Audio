@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7ccb7664-6372-4db2-a5a7-f9f7d8726ff2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ExtractedFeatures/english/0011/AngryMEL.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ExtractedFeatures/english/0011/HappyMEL.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ExtractedFeatures/english/0011/NeutralMEL.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ExtractedFeatures/english/0011/SadMEL.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ExtractedFeatures/english/0011/SurpriseMEL.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/featureExtraction.py" beforeDir="false" afterPath="$PROJECT_DIR$/featureExtraction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/CreateDataFrames.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/CreateDataFrames.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/mergeDataFrames.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/mergeDataFrames.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/ExtractFeatures.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/ExtractFeatures.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,24 +35,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.CreateDataFrames.executor": "Run",
-    "Python.FeatureSelectionDemo.executor": "Run",
-    "Python.SVM.executor": "Run",
-    "Python.SVMdemo.executor": "Run",
-    "Python.SVMdemo1.executor": "Run",
-    "Python.SVMdemo2.executor": "Run",
-    "Python.deneme.executor": "Run",
-    "Python.featureExtraction.executor": "Run",
-    "Python.mergeDataFrames.executor": "Run",
-    "Python.test.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "mehmet__new",
-    "last_opened_file_path": "/home/mehmet/Desktop/Emotion-Detection-From-Audio"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.CreateDataFrames.executor&quot;: &quot;Run&quot;,
+    &quot;Python.FeatureSelectionDemo.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SVM.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SVMdemo.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SVMdemo1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.SVMdemo2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.deneme.executor&quot;: &quot;Run&quot;,
+    &quot;Python.featureExtraction.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mergeDataFrames.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;mehmet__new&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/mehmet/Desktop/Emotion-Detection-From-Audio&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/K_best_features/11" />

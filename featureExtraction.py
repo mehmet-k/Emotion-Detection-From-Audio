@@ -52,6 +52,7 @@ def extractOnlyMEL(language,speaker_name, category,audio):
     # to be completed
     print("CATEGORY: ", category, " from: ", audio, " features has been saved")
     os.chdir("../../..")
+
 def extractOnlyMFCC(language,speaker_name, category,audio):
     y, sr = librosa.load(audio)
     # save name to write a file
