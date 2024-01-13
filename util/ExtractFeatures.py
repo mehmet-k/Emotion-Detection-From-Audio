@@ -190,3 +190,9 @@ def extract_mandarin_features(range_bottom,range_top,mod):
     else:
         for i in range (range_bottom,range_top):
             extract_features_by_speaker_with_mod("mandarin","0"+str(i),mod)
+
+def main():
+    #extract_english_features()
+    extract_mandarin_features(1,6,"TEMPO")
+
+main()
