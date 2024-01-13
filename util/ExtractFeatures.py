@@ -54,7 +54,7 @@ def extractOnlyMEL(language,speaker_name, category,audio):
     os.chdir("ExtractedFeatures/" + language + "/00" + speaker_name + "/")
     #####################FEATURE EXTRACTIONS#####################
     # MEL
-    a = librosa.feature.mel(y=y, sr=sr)
+    a = librosa.feature.melspectrogram(y=y, sr=sr)
     a = saveFeaturesToDictionary(a)
     #feature extraction end
     df = pd.DataFrame(a)
@@ -78,6 +78,21 @@ def extractOnlyMFCC(language,speaker_name, category,audio):
     print("CATEGORY: ", category, " from: ", audio, " features has been saved with mod MFCC")
     os.chdir("../../..")
 
+def extractOnlyCHROMA_STFT(language,speaker_name, category,audio):
+    y, sr = librosa.load(audio)
+    # save name to write a file
+    os.chdir("ExtractedFeatures/" + language + "/00" + speaker_name + "/")
+    #####################FEATURE EXTRACTIONS#####################
+    # MFCC
+    a = librosa.feature.chroma_stft(y=y, sr=sr)
+    a = saveFeaturesToDictionary(a)
+    #feature extraction end
+    df = pd.DataFrame(a)
+    df.to_csv(category + 'CHROMA_STFT.csv', mode='a', header=False, index=False)
+    # to be completed
+    print("CATEGORY: ", category, " from: ", audio, " features has been saved with mod CHROMA_STFT")
+    os.chdir("../../..")
+
 def extractOnlyTEMPO(language,speaker_name, category,audio):
     y, sr = librosa.load(audio)
     # save name to write a file
@@ -93,6 +108,21 @@ def extractOnlyTEMPO(language,speaker_name, category,audio):
     print("CATEGORY: ", category, " from: ", audio, " features has been saved with mod TEMPO")
     os.chdir("../../..")
 
+
+def extractOnlyRMS(language,speaker_name, category,audio):
+    y, sr = librosa.load(audio)
+    # save name to write a file
+    os.chdir("ExtractedFeatures/" + language + "/00" + speaker_name + "/")
+    #####################FEATURE EXTRACTIONS#####################
+    # MFCC
+    a = librosa.feature.rms(y=y, sr=sr)
+    a = saveFeaturesToDictionary( a)
+    #feature extraction end
+    df = pd.DataFrame(a)
+    df.to_csv(category + 'RMS.csv', mode='a', header=False, index=False)
+    # to be completed
+    print("CATEGORY: ", category, " from: ", audio, " features has been saved with mod TEMPO")
+    os.chdir("../../..")
 
 def save_audio_to_array(language,speaker_name,category):
     audio = []
@@ -115,7 +145,11 @@ def extract_features_by_category_with_mod(language,speaker_name,category,mod):
     elif mod == "TEMPO":
         df.to_csv(category + 'TEMPO.csv', mode='w', header=False, index=False)
         for audio in audios:
-            extractOnlyMFCC(language,speaker_name,category,audio)
+            extractOnlyTEMPO(language,speaker_name,category,audio)
+    elif mod == "CHROMA_STFT":
+        df.to_csv(category + 'CHROMA_STFT.csv', mode='w', header=False, index=False)
+        for audio in audios:
+            extractOnlyCHROMA_STFT(language, speaker_name, category, audio)
         
     #if new functions added for feature extraction, continue this if block
     #with the same structure
