@@ -78,7 +78,7 @@ def extractOnlyMFCC(language,speaker_name, category,audio):
     print("CATEGORY: ", category, " from: ", audio, " features has been saved with mod MFCC")
     os.chdir("../../..")
 
-def extractOnlyMFCC(language,speaker_name, category,audio):
+def extractOnlyTEMPO(language,speaker_name, category,audio):
     y, sr = librosa.load(audio)
     # save name to write a file
     os.chdir("ExtractedFeatures/" + language + "/00" + speaker_name + "/")
@@ -103,14 +103,19 @@ def save_audio_to_array(language,speaker_name,category):
 
 def extract_features_by_category_with_mod(language,speaker_name,category,mod):
     audios = save_audio_to_array(language,speaker_name, category)
+    df = pd.DataFrame()
     if mod == "MFCC":
+        df.to_csv(category + 'MFCC.csv', mode='a', header=False, index=False)
         for audio in audios:
             extractOnlyMFCC(language,speaker_name,category,audio)
     elif mod == "MEL":
+        df.to_csv(category + 'MEL.csv', mode='a', header=False, index=False)
         for audio in audios:
             extractOnlyMEL(language,speaker_name,category,audio)
     elif mod == "TEMPO":
-            extractOnlyMFCC(language,speaker_name,category,audio)
+        df.to_csv(category + 'TEMPO.csv', mode='a', header=False, index=False)
+        for audio in audios:
+            extractOnlyTEMPO(language,speaker_name,category,audio)
         
     #if new functions added for feature extraction, continue this if block
     #with the same structure
@@ -151,3 +156,9 @@ def extract_mandarin_features(range_bottom,range_top,mod):
     else:
         for i in range (range_bottom,range_top):
             extract_features_by_speaker_with_mod("mandarin","0"+str(i),mod)
+
+def main():
+    #extract_english_features()
+    extract_mandarin_features(1,6,"TEMPO")
+
+main()
