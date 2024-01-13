@@ -174,9 +174,9 @@ plt.title('Confusion Matrix')
 plt.show()
 
 
-class_accuracies = calculate_accuracy(conf_matrix, class_labels)
+results = calculate_accuracy(conf_matrix, class_labels)
 
-for class_label, metrics in class_accuracies.items():
+for class_label, metrics in results.items():
     print(f"Class: {class_label}")
     print(f"  Accuracy: {metrics['accuracy']:.2f}")
     print(f"  Recall: {metrics['recall']:.2f}")
