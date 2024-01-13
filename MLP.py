@@ -1,10 +1,36 @@
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.datasets import make_classification
 import os
 import numpy as np
 import pandas as pd
+def calculate_accuracy(conf_matrix, class_labels):
+
+    results = {}
+
+    for i, class_label in enumerate(class_labels):
+        # True positives, false positives, true negatives, and false negatives
+        tp = conf_matrix[i, i]
+        fp = np.sum(conf_matrix[i, :]) - tp
+        tn = np.sum(np.diag(conf_matrix)) - (tp + np.sum(conf_matrix[:, i]))
+        fn = np.sum(conf_matrix[:, i]) - tp
+
+        # Calculate accuracy, recall, and precision
+        accuracy = (tp + tn) / (tp + fp + fn + tn) if (tp + fp + fn + tn) != 0 else 0
+        recall = tp / (tp + fn) if (tp + fn) != 0 else 0
+        precision = tp / (tp + fp) if (tp + fp) != 0 else 0
+
+        results[class_label] = {
+            "accuracy": accuracy,
+            "recall": recall,
+            "precision": precision
+        }
+
+    return results
 
 def createTargetVector():
     vector = []
@@ -93,7 +119,7 @@ model.fit(X_train, y_train)
 
 y_pred = model.predict(X_test)
 scores=[0,0,0,0,0]
-print(len(y_pred),y_pred)
+
 for j in range(0,len(y_pred)):
     if y_test[j]==y_pred[j] and y_test[j] == "Angry":
         scores[0] = scores[0]+1
@@ -117,8 +143,6 @@ for j in range(0,len(y_pred)):
         count[3] += 1
     elif y_test[j]== "Surprise":
         count[4] += 1
-for i in range(0,len(count)):
-    print(count[i])
 
 print("angry score:",scores[0]/count[0]*100)
 
@@ -132,3 +156,31 @@ print("surprise score:", scores[4]/count[4]*100)
 
 accuracy = accuracy_score(y_test, y_pred)
 print("Accuracy: {:.2f}%".format(accuracy*100))
+
+
+
+class_labels = ["Angry", "Happy", "Neutral", "Sad", "Surprise"]
+conf_matrix = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:")
+print("\t", *class_labels)  
+for i, label in enumerate(class_labels):
+    print(label + "\t  ", conf_matrix[i])
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", xticklabels=class_labels, yticklabels=class_labels)
+plt.xlabel('Predicted')
+plt.ylabel('True')
+plt.title('Confusion Matrix')
+plt.show()
+
+
+class_accuracies = calculate_accuracy(conf_matrix, class_labels)
+
+for class_label, metrics in class_accuracies.items():
+    print(f"Class: {class_label}")
+    print(f"  Accuracy: {metrics['accuracy']:.2f}")
+    print(f"  Recall: {metrics['recall']:.2f}")
+    print(f"  Precision: {metrics['precision']:.2f}")
+    f1score = 2*(metrics['recall']*metrics['precision']/(metrics['recall'] + metrics['precision']))
+    print("F1 Score: ", f1score)
+    print("-" * 20)  
