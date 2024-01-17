@@ -1,3 +1,4 @@
+from sklearn import svm
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import train_test_split
@@ -8,6 +9,10 @@ from sklearn.datasets import make_classification
 import os
 import numpy as np
 import pandas as pd
+
+import util.CreateDataFrames
+import util.CreateTargetVectors
+
 def calculate_accuracy(conf_matrix, class_labels):
 
     results = {}
@@ -34,15 +39,15 @@ def calculate_accuracy(conf_matrix, class_labels):
 
 def createTargetVector():
     vector = []
-    for i in range(0,349):
+    for i in range(0,350):
         vector.append('Angry')
-    for i in range(0,349):
+    for i in range(0,350):
         vector.append('Happy')
-    for i in range(0,349):
+    for i in range(0,350):
         vector.append('Neutral')
-    for i in range(0,349):
+    for i in range(0,350):
         vector.append('Sad')
-    for i in range(0,349):
+    for i in range(0,350):
         vector.append('Surprise')
     return vector
 
@@ -102,20 +107,37 @@ def createMasterDataFrame(speaker_name):
     os.chdir("../../..")
     return master_data_frame
 
-y = createTargetVector()
-masterDF = createMasterDataFrameMFCC("11")
+y = util.CreateTargetVectors.createTargetVectorALL(350)
+masterDF = util.CreateDataFrames.createMasterDataFrameAllEmotions("11","english","MFCC")
 for i in range(12,16):
-    masterDF = np.concatenate((masterDF,createMasterDataFrameMFCC(str(i))))
+    tempdf = util.CreateDataFrames.createMasterDataFrameAllEmotions(str(i),"english","MFCC")
+    masterDF = np.concatenate((masterDF,tempdf))
 
 for i in range(12,16):
-    y = np.concatenate((y, createTargetVector()))
+    y = np.concatenate((y, util.CreateTargetVectors.createTargetVectorALL(350)))
 
-X = masterDF
+print(masterDF.shape,len(y))
+X_train = masterDF
 #X, y = make_classification(n_samples=100, random_state=1)
-X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,random_state=1)
-model = MLPClassifier(alpha = 0.01, batch_size = 256, epsilon = 1e-08, hidden_layer_sizes = (300,), learning_rate = 'adaptive', max_iter = 500)
+#X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,random_state=1)
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+# Don't cheat - fit only on training data
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+# apply same transformation to test data
 
-model.fit(X_train, y_train)
+X_test = util.CreateDataFrames.createMasterDataFrameAllEmotions("17","english","MFCC")
+y_test = util.CreateTargetVectors.createTargetVectorALL(350)
+
+X_test = scaler.transform(X_test)
+#model = MLPClassifier(alpha = 1e-5, batch_size = 64, epsilon = 1e-08, hidden_layer_sizes = (100,), learning_rate = 'adaptive', max_iter = 500)
+
+model = svm.SVC(decision_function_shape='ovo', kernel= "rbf")
+
+model.fit(X_train,y)
+
+model.fit(X_train, y)
 
 y_pred = model.predict(X_test)
 scores=[0,0,0,0,0]

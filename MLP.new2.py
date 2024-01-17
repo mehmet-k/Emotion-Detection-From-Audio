@@ -48,14 +48,14 @@ def calculate_accuracy(conf_matrix, class_labels):
     return results
 K=1
 #masterDF = CDF.createMasterDataFrameAllEmotions("11","english","MFCC")
-masterDF = CDF.createMasterDataFrameAllEmotions("11","english","MEL")
+masterDF = CDF.createMasterDataFrameAllEmotions("11","english","MFCC")
 
 #alternative call to above :  CDF.createMasterDataFrame("11","english","MFCC",True,True,True,True,True)
 inital_length = len(masterDF)/5
 print(inital_length)
 for i in range(12,16):
     K+=1
-    masterDF = np.concatenate((masterDF,CDF.createMasterDataFrameAllEmotions(str(i),"english","MEL")))
+    masterDF = np.concatenate((masterDF,CDF.createMasterDataFrameAllEmotions(str(i),"english","MFCC")))
 
 y=CTV.createTargetVectorALL(inital_length)
 for i in range(12,16):

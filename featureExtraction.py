@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+import util.ExtractFeatures
+
 ANGRY = "Angry"
 HAPPY = "Happy"
 NEUTRAL = "Neutral"
@@ -163,7 +165,7 @@ def extract_mandarin_features():
         extract_features_by_speaker("mandarin","0"+str(i))
     extract_features_by_speaker("mandarin",str(10))
 def main():
-    extract_english_features()
     #extract_mandarin_features()
+    util.ExtractFeatures.extract_english_features(11,16,"CHROMA_STFT")
 
 main()

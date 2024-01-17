@@ -42,8 +42,8 @@ def createMasterDataFrameMFCC(speaker_name):
     master_data_frame  = pd.concat(master_data_frame )
     os.chdir("../../..")
     return master_data_frame
-def SelectKBest_Data_Frame(data_frame,target_vector):
-    best_features = skl.SelectKBest(skl.f_classif, k=2)
+def SelectKBest_Data_Frame(data_frame,target_vector,K):
+    best_features = skl.SelectKBest(skl.f_classif, k=K)
     new_features = best_features.fit_transform(X=data_frame, y=target_vector)
     new_data_frame = pd.DataFrame(data=new_features, columns=best_features.get_feature_names_out())
     return new_data_frame

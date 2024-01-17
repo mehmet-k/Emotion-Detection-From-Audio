@@ -1,22 +1,18 @@
-import os
 import numpy as np
-import matplotlib.pyplot as plt
-import sklearn.feature_selection as skl
-import pandas as pd
-import sklearn.metrics
+import sklearn
 from sklearn import svm
-from sklearn.neural_network import MLPClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import Normalizer
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
 from sklearn.metrics import confusion_matrix, classification_report
-
 import util.CreateDataFrames as CDF
 import util.CreateTargetVectors as CTV
 import util.printScores as PS
+from sklearn.model_selection import train_test_split
+import util.kBestFeatures as kBF
 import util.mergeDataFrames as uDF
+from sklearn.preprocessing import StandardScaler
 import sklearn.feature_selection as fs
-
-features = ["MFCC"]
-
 def calculate_accuracy(conf_matrix, class_labels):
 
     results = {}
@@ -41,57 +37,74 @@ def calculate_accuracy(conf_matrix, class_labels):
 
     return results
 
-K=15
+#masterDF = CDF.createMasterDataFrameAllEmotions("11","english","MFCC")
+#masterDF = CDF.createMasterDataFrameAllEmotions("11","english","MFCC")
+
+#alternative call to above :  CDF.createMasterDataFrame("11","english","MFCC",True,True,True,True,True)
+#inital_length = len(masterDF)/5
+#print(inital_length)
+#for i in range(12,16):
+#    K+=1
+#    masterDF = np.concatenate((masterDF,CDF.createMasterDataFrameAllEmotions(str(i),"english","MFCC")))
+
+
+
+features = ["MFCC","CHROMA_VQT","RMS","MEL"]
+
+K=20
 #masterDF = uDF.getAveragedMergedDataFrames("11","english",features)
-#masterDF = uDF.getMergedDataFrames("11","english",features)
-masterDF = CDF.createMasterDataFrameAllEmotions("11","english","MFCC")
-#masterDF = uDF.getMergedDataFramesWithKBestFeatures("11","english",features,K)
+masterDF = uDF.getMergedDataFrames("11","english",features)
 #alternative call to above :  CDF.createMasterDataFrame("11","english","MFCC",True,True,True,True,True)
 inital_length = len(masterDF)/5
-print(inital_length)
 for i in range(12,18):
     K+=1
-    #masterDF = np.concatenate((masterDF,uDF.getMergedDataFrames(str(i),"english",features)))
-
-    #masterDF = np.concatenate((masterDF,uDF.getMergedDataFramesWithKBestFeatures(str(i),"english",features,K)))
+    masterDF = np.concatenate((masterDF,uDF.getMergedDataFrames(str(i),"english",features)))
     #masterDF = np.concatenate((masterDF,uDF.getAveragedMergedDataFrames(str(i),"english",features)))
 
+
 y=CTV.createTargetVectorALL(inital_length)
+X = masterDF
 for i in range(12,18):
     y = np.concatenate((y, CTV.createTargetVectorALL(inital_length)))
 
 #masterDF.to_csv("master",index=False)
 print(masterDF.shape,len(y))
 
-X = masterDF
-#X, y = make_classification(n_samples=100, random_state=1)
-X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,random_state=1,test_size=0.2)
-from sklearn.preprocessing import StandardScaler
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,random_state=1,test_size=0.8)
+
+#testDF = uDF.getAveragedMergedDataFrames("17","english",features)
+testDF = uDF.getMergedDataFrames("18","english",features)
+#testDF = uDF.getMergedDataFramesWithKBestFeatures("17","english",features,K)
+testY = CTV.createTargetVectorALL(inital_length)
+
+#normalize data
+#transformer = Normalizer()
+#X_train = transformer.fit_transform(X_train)
+#X_test = transformer.transform(X_test)
+#testDF = transformer.transform(testDF)
+
+#normalize data
 scaler = StandardScaler()
-# Don't cheat - fit only on training data
 scaler.fit(X_train)
 X_train = scaler.transform(X_train)
 # apply same transformation to test data
 X_test = scaler.transform(X_test)
-model = MLPClassifier(alpha = 0.0001, batch_size = 256, epsilon = 1e-08, hidden_layer_sizes = (16,), learning_rate = 'adaptive', max_iter =500)
-
-#testDF = uDF.getAveragedMergedDataFrames("17","english",features)
-#testDF = uDF.getMergedDataFrames("18","english",features)
-testDF = CDF.createMasterDataFrameAllEmotions("18","english","MFCC")
-#testDF = uDF.getMergedDataFramesWithKBestFeatures("17","english",features,K)
-testY = CTV.createTargetVectorALL(inital_length)
 testDF = scaler.transform(testDF)
 
-feature_selector = fs.SelectKBest(fs.f_classif, k='all')
+#select K best features
+#best_features = fs.SelectKBest(fs.f_classif, k=K)
+feature_selector = fs.SelectKBest(fs.f_classif, k=100)
 X_train = feature_selector.fit_transform(X_train, y_train)
 X_test = feature_selector.transform(X=X_test)
 testDF = feature_selector.transform(X=testDF)
 
-model.fit(X_train, y_train)
+#traing SVM
+clf = svm.SVC(decision_function_shape='ovo', kernel= "rbf")
+clf.fit(X_train,y_train)
 
 print("-----------TEST SPLIT--------------------")
 
-y_pred = model.predict(X_test)
+y_pred = clf.predict(X_test)
 PS.printScoresOld(y_test,y_pred)
 
 class_labels = ["Angry", "Happy", "Neutral", "Sad", "Surprise"]
@@ -114,7 +127,7 @@ for class_label, metrics in class_accuracies.items():
 
 
 print("-------------TEST ACTOR 18-----------------")
-predictions = model.predict(testDF)
+predictions = clf.predict(testDF)
 
 PS.printScoresOld(testY,predictions)
 
@@ -135,4 +148,5 @@ for class_label, metrics in class_accuracies.items():
     f1score = 2*(metrics['recall']*metrics['precision']/(metrics['recall'] + metrics['precision']))
     print("F1 Score: ", f1score)
     print("-" * 20)
+
 

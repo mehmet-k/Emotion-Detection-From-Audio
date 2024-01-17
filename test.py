@@ -4,11 +4,16 @@ import pandas
 
 import util.mergeDataFrames as mDF
 
-df = mDF.getMergedDataFrames("11","english",["MFCC","MEL","TEMPO"])
-df = pandas.DataFrame(df)
-#df = pandas.DataFrame(df)
-df.to_csv("testMerge.csv",mode='w', header=False, index=False)
+import util.ExtractFeatures
 
-import util.ExtractFeatures as ef
 
-#ef.extract_english_features(11,16,"CHROMA_STFT")
+#util.ExtractFeatures.extract_english_features(11,19,"CHROMA_VQT")
+
+util.ExtractFeatures.extract_mandarin_features(1,11,"MFCC")
+util.ExtractFeatures.extract_mandarin_features(1,11,"MEL")
+util.ExtractFeatures.extract_mandarin_features(1,11,"RMS")
+util.ExtractFeatures.extract_mandarin_features(1,11,"CHROMA_VQT")
+util.ExtractFeatures.extract_mandarin_features(1,11,"CHROMA_STFT")
+util.ExtractFeatures.extract_mandarin_features(1,11,"TEMPO")
+
+#util.ExtractFeatures.extract_english_features(11,19,"TEMPO")
