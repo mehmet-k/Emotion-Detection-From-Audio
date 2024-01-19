@@ -53,6 +53,31 @@ def getMergedDataFrames(speaker_name,language,features):
     #matrix = pandas.DataFrame(list_of_lists).T
     list_of_lists = np.array(list_of_lists)
     return list_of_lists
+
+def getMergedDataFramesSpecifiedEmotions(speaker_name,language,features,emotions):
+    List = []
+    for feature in features:
+        List.append(numpy.array(cdf.createMasterDataFrame(speaker_name, language, feature,emotions[0], emotions[1], emotions[2],emotions[3],
+                                                          emotions[4])))
+
+    list_of_lists = []
+    max_range = 0
+    for emotion in emotions:
+        if emotion:
+            max_range += 350
+
+    for i in range(0, max_range):
+        tmp = []
+        for feature in range(len(features)):
+            tmp.append(List[feature][i])
+        tmp = numpy.hstack(tmp)
+        list_of_lists.append(tmp)
+
+    ##print(list)
+    #matrix = pandas.DataFrame(list_of_lists).T
+    list_of_lists = np.array(list_of_lists)
+    return list_of_lists
+
 def SelectKBest_Data_Frame(data_frame,target_vector,K):
     best_features = skl.SelectKBest(skl.f_classif, k=K)
     new_features = best_features.fit_transform(X=data_frame, y=target_vector)
