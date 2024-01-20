@@ -1,10 +1,10 @@
 import numpy as np
 import sklearn
 from sklearn import svm
-from sklearn.preprocessing import Normalizer
+from sklearn.preprocessing import Normalizer, MinMaxScaler
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score,confusion_matrix
 import util.CreateDataFrames as CDF
 import util.CreateTargetVectors as CTV
 import util.printScores as PS
@@ -49,7 +49,7 @@ def calculate_accuracy(conf_matrix, class_labels):
 
 
 
-features = ["MFCC","CHROMA_VQT","RMS","MEL"]
+features = ["RMS"]
 
 K=20
 #masterDF = uDF.getAveragedMergedDataFrames("11","english",features)
@@ -70,19 +70,19 @@ for i in range(12,18):
 #masterDF.to_csv("master",index=False)
 print(masterDF.shape,len(y))
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,random_state=1,test_size=0.8)
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,random_state=None,test_size=0.8)
 
 #testDF = uDF.getAveragedMergedDataFrames("17","english",features)
 testDF = uDF.getMergedDataFrames("18","english",features)
 #testDF = uDF.getMergedDataFramesWithKBestFeatures("17","english",features,K)
 testY = CTV.createTargetVectorALL(inital_length)
-
+"""
 #normalize data
-#transformer = Normalizer()
-#X_train = transformer.fit_transform(X_train)
-#X_test = transformer.transform(X_test)
-#testDF = transformer.transform(testDF)
-
+transformer = Normalizer()
+X_train = transformer.fit_transform(X_train)
+X_test = transformer.transform(X_test)
+testDF = transformer.transform(testDF)
+"""
 #normalize data
 scaler = StandardScaler()
 scaler.fit(X_train)
@@ -90,10 +90,16 @@ X_train = scaler.transform(X_train)
 # apply same transformation to test data
 X_test = scaler.transform(X_test)
 testDF = scaler.transform(testDF)
-
+"""
+scaler = MinMaxScaler()
+# Fit and transform the data
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+testDF = scaler.transform(testDF)
+"""
 #select K best features
 #best_features = fs.SelectKBest(fs.f_classif, k=K)
-feature_selector = fs.SelectKBest(fs.f_classif, k=100)
+feature_selector = fs.SelectKBest(fs.f_classif, k='all')
 X_train = feature_selector.fit_transform(X_train, y_train)
 X_test = feature_selector.transform(X=X_test)
 testDF = feature_selector.transform(X=testDF)
@@ -125,6 +131,17 @@ for class_label, metrics in class_accuracies.items():
     print("F1 Score: ", f1score)
     print("-" * 20)
 
+# Calculate metrics
+precision = precision_score(y_test, y_pred, average='macro')
+recall = recall_score(y_test, y_pred, average='macro')
+f1 = f1_score(y_test, y_pred, average='macro')
+accuracy = accuracy_score(y_test, y_pred)
+print("Overall accuracies: ")
+# Print the results
+print(f'Precision: {precision:.4f}')
+print(f'Recall: {recall:.4f}')
+print(f'F1-score: {f1:.4f}')
+print(f'Accuracy: {accuracy:.4f}')
 
 print("-------------TEST ACTOR 18-----------------")
 predictions = clf.predict(testDF)
@@ -149,4 +166,13 @@ for class_label, metrics in class_accuracies.items():
     print("F1 Score: ", f1score)
     print("-" * 20)
 
-
+precision = precision_score(testY, predictions, average='macro')
+recall = recall_score(y_test, y_pred, average='macro')
+f1 = f1_score(y_test, y_pred, average='macro')
+accuracy = accuracy_score(y_test, y_pred)
+print("Overall accuracies: ")
+# Print the results
+print(f'Precision: {precision:.4f}')
+print(f'Recall: {recall:.4f}')
+print(f'F1-score: {f1:.4f}')
+print(f'Accuracy: {accuracy:.4f}')

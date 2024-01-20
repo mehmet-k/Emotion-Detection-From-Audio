@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sklearn.metrics
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import confusion_matrix, classification_report, precision_score, recall_score, f1_score,accuracy_score
 from sklearn.preprocessing import StandardScaler, LabelEncoder, MinMaxScaler
 import util.CreateDataFrames as CDF
 import util.CreateTargetVectors as CTV
@@ -18,7 +18,7 @@ from keras.optimizers import Adam
 from keras.callbacks import *
 
 
-features = ["MFCC","MEL","RMS","CHROMA_STFT","TEMPO"]
+features = ["CHROMA_STFT"]
 
 def calculate_accuracy(conf_matrix, class_labels):
 
@@ -45,7 +45,7 @@ def calculate_accuracy(conf_matrix, class_labels):
     return results
 
 K=15
-emotions = [True,True,True,False,False]
+emotions = [True,True,True,True,True]
 #masterDF = uDF.getAveragedMergedDataFrames("11","english",features)
 masterDF = uDF.getMergedDataFrames("11","english",features)
 #masterDF = uDF.getMergedDataFramesSpecifiedEmotions("11","english",features,emotions)
@@ -55,36 +55,36 @@ masterDF = uDF.getMergedDataFrames("11","english",features)
 #inital_length = len(masterDF)/5
 inital_length = 350
 print(inital_length)
-for i in range(12,18):
+for i in range(12,19):
     K+=1
     masterDF = np.concatenate((masterDF,uDF.getMergedDataFrames(str(i),"english",features)))
     #masterDF = np.concatenate((masterDF, CDF.createMasterDataFrameAllEmotions(str(i), "english", "MFCC")))
     #masterDF = np.concatenate((masterDF,uDF.getMergedDataFramesWithKBestFeatures(str(i),"english",features,K)))
     #masterDF = np.concatenate((masterDF,uDF.getAveragedMergedDataFrames(str(i),"english",features)))
-"""""
-for i in range(1,10):
+
+for i in range(1,8):
     K+=1
     print(i)
     #masterDF = np.concatenate((masterDF,uDF.getMergedDataFramesSpecifiedEmotions(str(i),"mandarin",features,emotions)))
     masterDF = np.concatenate(
         (masterDF, uDF.getMergedDataFrames(str(i), "mandarin", features)))
-"""
 
-"""
+
+
 y=CTV.createTargetVector(inital_length,emotions[0], emotions[1], emotions[2],emotions[3],emotions[4])
 for i in range(12,18):
     y = np.concatenate((y, CTV.createTargetVector(inital_length,emotions[0], emotions[1], emotions[2],emotions[3],emotions[4])))
 for i in range(1,10):
     y = np.concatenate((y, CTV.createTargetVector(inital_length,emotions[0], emotions[1], emotions[2],emotions[3],emotions[4])))
 
-"""
+
 y=CTV.createTargetVectorALL(inital_length)
-for i in range(12,18):
+for i in range(12,19):
     y = np.concatenate((y, CTV.createTargetVectorALL(inital_length)))
-"""
-for i in range(1,10):
+
+for i in range(1,8):
     y = np.concatenate((y, CTV.createTargetVectorALL(inital_length)))
-"""
+
 #masterDF.to_csv("master",index=False)
 print(masterDF.shape,len(y))
 
@@ -105,18 +105,14 @@ testDF = uDF.getMergedDataFrames("18","english",features)
 #testY = CTV.createTargetVector(inital_length,emotions[0], emotions[1], emotions[2],emotions[3],emotions[4])
 
 testY = CTV.createTargetVectorALL(inital_length)
-"""""
-testDF = uDF.getMergedDataFrames("18", "english", features)
-#testDF = uDF.getAveragedMergedDataFrames("18","english",features)
-"""
+
 #---------APPLY NORMALIZATION HERE---------------------#
-
-#scaler = StandardScaler()
-# fit only on training data
-#X_train = scaler.fit_transform(X_train)
-# transformation to test data
-#X_test = scaler.transform(X_test)
-
+"""
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+testDF = scaler.transform(testDF)
+"""
 # Initialize the MinMaxScaler
 scaler = MinMaxScaler()
 # Fit and transform the data
@@ -135,7 +131,7 @@ testDF = feature_selector.transform(X=testDF)
 
 # Build the MLP model
 model = Sequential()
-callback = EarlyStopping(monitor='loss',patience=3)
+callback = EarlyStopping(monitor='loss',patience=10)
 # Input layer
 model.add(Dense(units=128, activation='relu', input_dim=X_train.shape[1]))
 model.add(Dropout(0.05))
@@ -149,7 +145,7 @@ model.add(Dropout(0.1))
 model.add(Dense(units=5, activation='softmax'))
 
 # Compile the model
-model.compile(optimizer=Adam(learning_rate=0.0001), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=Adam(learning_rate=0.001), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # Train the model
 history = model.fit(X_train, y_train, epochs=100, batch_size=128, validation_split=0.3)
@@ -160,18 +156,19 @@ print("-----------TEST SPLIT--------------------")
 
 #y_pred = model.predict(X_test)
 
-y_pred = model.predict(testDF)
+y_pred = model.predict(X_test)
 
 #decode labels
+
 predicted_labels_indices = np.argmax(y_pred, axis=1)
 y_pred = label_encoder.inverse_transform(predicted_labels_indices)
 
-#y_test = label_encoder.inverse_transform(y_test)
+y_test = label_encoder.inverse_transform(y_test)
 
-PS.printScores(testY,y_pred)
+PS.printScores(y_test,y_pred)
 
 class_labels = ["Angry", "Happy", "Neutral", "Sad", "Surprise"]
-conf_matrix = confusion_matrix(testY,y_pred)
+conf_matrix = confusion_matrix(y_test,y_pred)
 print("Confusion Matrix:")
 print("\t", *class_labels)
 for i, label in enumerate(class_labels):
@@ -199,9 +196,21 @@ plt.ylabel('Accuracy')
 plt.legend()
 plt.show()
 
+#---------PRINT OVERALL METRICS-------------------
+precision = precision_score(y_test,y_pred , average='macro')
+recall = recall_score(y_test, y_pred, average='macro')
+f1 = f1_score(y_test, y_pred, average='macro')
+accuracy = accuracy_score(y_test, y_pred)
+print("Overall accuracies: ")
+# Print the results
+print(f'Precision: {precision:.4f}')
+print(f'Recall: {recall:.4f}')
+print(f'Accuracy: {accuracy:.4f}')
+print(f'F1-score: {f1:.4f}')
+
 #-----------PLOT CONFUSION MATRIX-------------------
 # Create confusion matrix
-cm = confusion_matrix(testY, y_pred)
+cm = confusion_matrix(y_test, y_pred)
 
 # Plot confusion matrix using Seaborn heatmap
 plt.figure(figsize=(8, 6))

@@ -8,12 +8,21 @@ import util.ExtractFeatures
 
 
 #util.ExtractFeatures.extract_english_features(11,19,"CHROMA_VQT")
-
+"""
 util.ExtractFeatures.extract_mandarin_features(1,11,"MFCC")
 util.ExtractFeatures.extract_mandarin_features(1,11,"MEL")
 util.ExtractFeatures.extract_mandarin_features(1,11,"RMS")
 util.ExtractFeatures.extract_mandarin_features(1,11,"CHROMA_VQT")
 util.ExtractFeatures.extract_mandarin_features(1,11,"CHROMA_STFT")
 util.ExtractFeatures.extract_mandarin_features(1,11,"TEMPO")
-
+"""
 #util.ExtractFeatures.extract_english_features(11,19,"TEMPO")
+
+#util.ExtractFeatures.extract_english_features(11,19,"MFCC")
+"""
+util.ExtractFeatures.extract_english_features(11,19,"MEL")
+util.ExtractFeatures.extract_english_features(11,19,"RMS")
+util.ExtractFeatures.extract_english_features(11,19,"CHROMA_STFT")
+util.ExtractFeatures.extract_english_features(11,19,"TEMPO")
+"""
+util.ExtractFeatures.extract_english_features(11,19,"CHROMA_STFT")
